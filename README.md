@@ -3,4 +3,4 @@ An intelligent navigation decision-support system that combines AI/ML with satel
 
 ## Problem Statement
 
-![Problem Statement](problem-statement.png)
+![Problem Statement](Problem-Statement.png)
