@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Antarctic Traverse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-primary: #050507;
+    --bg-secondary: #0d0d12;
+    --bg-tertiary: #16161e;
+    --text-primary: #ffffff;
+    --text-secondary: #a1a1aa;
+    --accent-blue: #3b82f6;
+    --accent-glow: rgba(59, 130, 246, 0.15);
+    --border-subtle: rgba(255, 255, 255, 0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; background: var(--bg-primary); }
+
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Inter', -apple-system, sans-serif;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4 {
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+  }
+
+  .serif { font-family: 'Playfair Display', serif; }
+
+  a { text-decoration: none; color: inherit; transition: color 0.3s; }
+  a:hover { color: var(--accent-blue); }
+  
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 6vw;
+  }
+
+  /* Utility class for clean, structural gaps between distinct concepts */
+  .section-spacer {
+    height: 8vh;
+    min-height: 60px;
+    width: 100%;
+  }
+
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    padding: 1.5rem 0; /* Changed padding to remove horizontal spread */
+    background: transparent;
+    transition: background 0.5s, backdrop-filter 0.5s;
+  }
+
+  /* New wrapper to keep nav items aligned with page content */
+  .nav-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 6vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
+  nav.scrolled {
+    background: rgba(5, 5, 7, 0.8);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .brand {
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .brand-logo {
+    width: 24px;
+    height: 24px;
+    background: var(--text-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--bg-primary);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 3rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+
+  .btn-outline {
+    border: 1px solid var(--border-subtle);
+    padding: 0.6rem 1.2rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    background: rgba(255,255,255,0.03);
+    transition: all 0.3s ease;
+  }
+
+  .btn-outline:hover {
+    background: var(--text-primary);
+    color: var(--bg-primary);
+  }
+
+  .hero {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding-top: 16.8vh;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(5,5,7,0.2) 0%, var(--bg-primary) 95%), url('background.png') center/cover;
+    background-color: var(--bg-secondary); /* Fallback */
+    z-index: -1;
+    opacity: 0.97;
+    filter: grayscale(20%) contrast(1.1);
+  }
+
+  .hero-content {
+    max-width: 900px;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 0.4rem 0.8rem;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-blue);
+    margin-bottom: 2rem;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.5rem, 5.5vw, 6rem);
+    font-weight: 600;
+    margin-bottom: 2rem;
+    line-height: 1.05;
+  }
+
+  .hero h1 span {
+    color: var(--text-secondary);
+  }
+
+  .hero p {
+    font-size: clamp(1.1rem, 2vw, 1.4rem);
+    color: var(--text-secondary);
+    max-width: 700px;
+    font-weight: 300;
+  }
+
+  section {
+    padding: 10rem 0;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .section-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+  }
+
+  .section-title {
+    font-size: clamp(2.5rem, 4vw, 3.5rem);
+    margin-bottom: 2rem;
+  }
+
+  .abstract-text {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    font-weight: 300;
+  }
+
+  .abstract-text strong {
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+
+  .bento-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-auto-rows: 22rem;
+    gap: 1.5rem;
+    margin-top: 5rem;
+  }
+
+  .bento-item {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.4s ease, background 0.4s ease;
+  }
+
+  .bento-item:hover {
+    background: var(--bg-tertiary);
+    transform: translateY(-4px);
+  }
+
+  .bento-item:nth-child(1) { grid-column: span 8; }
+  .bento-item:nth-child(2) { grid-column: span 4; }
+  .bento-item:nth-child(3) { grid-column: span 4; }
+  .bento-item:nth-child(4) { grid-column: span 8; }
+
+  .bento-meta {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--accent-blue);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .bento-item h3 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .bento-item p {
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+  }
+
+  .tech-container {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 5rem;
+    margin-top: 4rem;
+  }
+
+  .tech-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 3rem;
+  }
+
+  .tech-pill {
+    padding: 0.8rem 1.5rem;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+  }
+
+  .fade-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .fade-up.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  footer {
+    padding: 6rem 0;
+    background: var(--bg-primary);
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 4rem;
+  }
+
+  .footer-grid h4 {
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+  }
+
+  .footer-grid ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  @media (max-width: 1024px) {
+    .section-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .bento-item:nth-child(n) { grid-column: span 12; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="navbar">
+  <div class="nav-wrapper">
+    <div class="brand">
+      Antarctic Traverse
+    </div>
+    <div class="nav-links">
+      <a href="#abstract">Abstract</a>
+      <a href="#methodology">Methodology</a>
+      <a href="#architecture">Architecture</a>
+    </div>
+    <a href="#abstract" class="btn-outline">Explore Research</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-bg"></div>
+  <div class="container hero-content fade-up">
+    <h1>
+      Predict the<br>ice.<br>
+      <span class="serif">Understand<br>the risk.</span><br>
+      Traverse<br>safely.
+    </h1>
+    <p>A unified decision-support workflow integrating AI-based forecasting, physics-informed iceberg trajectory modeling, and explainable, risk-aware routing.</p>
+  </div>
+</header>
+
+<!-- Implemented Structural Gap -->
+<div class="section-spacer"></div>
+
+<section id="abstract" class="container">
+  <div class="section-grid">
+    <div class="fade-up">
+      <h2 class="section-title">The Operational Challenge</h2>
+    </div>
+    <div class="abstract-text fade-up">
+      <p>Research vessels operating near Antarctica navigate against sea ice that shifts by the hour and icebergs that drift for weeks. Current methodologies rely on fragmented telemetry and manual analysis.</p>
+      <br>
+      <p>Antarctic Traverse integrates satellite, sea-ice, ocean, and weather data to forecast ice conditions, detect icebergs, and predict their movement. These forecasts are mathematically transformed into dynamic hazard maps, delivering <strong>one unified view of hazards, route risks, and safer alternatives.</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- Implemented Structural Gap -->
+<div class="section-spacer"></div>
+
+<section id="methodology" class="container">
+  <div class="fade-up">
+    <h2 class="section-title">Algorithmic Methodology</h2>
+    <p class="abstract-text" style="max-width: 600px;">A six-stage pipeline translating raw Copernicus and NSIDC datasets into Pareto-optimal navigational vectors.</p>
+  </div>
+
+  <div class="bento-grid">
+    <div class="bento-item fade-up">
+      <div class="bento-meta">Phase I</div>
+      <div>
+        <h3>Spatial-Temporal Forecasting</h3>
+        <p>The system employs U-Net for precise iceberg segmentation and ConvLSTM for short-term spatial and temporal sea-ice dynamics, trained against historical radar backscatter and climate variables.</p>
+      </div>
+    </div>
+    <div class="bento-item fade-up">
+      <div class="bento-meta">Phase II</div>
+      <div>
+        <h3>Data Assimilation</h3>
+        <p>Continuous ingestion and registration of Sentinel-1 SAR, AMSR2, ERA5, and GLORYS12V1 ocean data onto a common spatial grid.</p>
+      </div>
+    </div>
+    <div class="bento-item fade-up">
+      <div class="bento-meta">Phase III</div>
+      <div>
+        <h3>Risk Quantification</h3>
+        <p>A POLARIS-style Risk Index Outcome (RIO) evaluates hazards, dynamically mapping AI predictive confidence to actionable maritime constraints.</p>
+      </div>
+    </div>
+    <div class="bento-item fade-up">
+      <div class="bento-meta">Phase IV</div>
+      <div>
+        <h3>Multi-Objective Optimization</h3>
+        <p>A* and Dijkstra algorithms conduct primary route searches over the time-varying graph. Subsequently, NSGA-II frameworks process the Pareto front to balance fuel efficiency, transit time, and operational risk.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="architecture" class="container">
+  <div class="tech-container fade-up">
+    <h2 class="section-title">System Architecture</h2>
+    <p class="abstract-text" style="max-width: 800px;">Engineered for high availability and computational scale. The infrastructure separates heavy tensor operations from rapid client delivery, ensuring research vessels receive deterministic routing data in real-time.</p>
+    
+    <div class="tech-list">
+      <div class="tech-pill">Python</div>
+      <div class="tech-pill">FastAPI</div>
+      <div class="tech-pill">Flask</div>
+      <div class="tech-pill">PyTorch</div>
+      <div class="tech-pill">TensorFlow</div>
+      <div class="tech-pill">Go Language</div>
+      <div class="tech-pill">TypeScript</div>
+      <div class="tech-pill">Docker</div>
+      <div class="tech-pill">Blockchain</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container footer-grid">
+    <div>
+      <div class="brand" style="margin-bottom: 1.5rem;">
+        Antarctic Traverse
+      </div>
+      <p style="max-width: 300px;">An AI-enabled decision support platform for Antarctic sea-ice forecasting, iceberg trajectory prediction, and safe vessel navigation.</p>
+    </div>
+    <div>
+      <h4>Project Context</h4>
+      <ul>
+        <li>Smart India Hackathon 2026</li>
+        <li>Problem Statement 26059</li>
+        <li>Team LimitLess</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Organization</h4>
+      <ul>
+        <li>Ministry of Earth Sciences</li>
+        <li>National Centre for Polar and Ocean Research</li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Navbar scroll effect
+  const nav = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) {
+      nav.classList.add('scrolled');
+    } else {
+      nav.classList.remove('scrolled');
+    }
+  });
+
+  // Intersection Observer for fade-up animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        // Unobserve after animating to prevent repeating the animation
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    root: null,
+    threshold: 0.1,
+    rootMargin: "-50px"
+  });
+
+  // Initialize observer on all elements with '.fade-up' class
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
